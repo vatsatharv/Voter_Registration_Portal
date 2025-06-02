@@ -78,14 +78,6 @@ A web-based voter registration system built with **Java**, **JSP**, **Servlets**
 
 
 
----
-
-## 📄 License
-
-MIT License – use it freely for learning and development.
-
----
-
 ## 🤝 Contributing
 
 Feel free to fork, suggest improvements, or raise issues!
