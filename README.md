@@ -55,8 +55,8 @@ A web-based voter registration system built with **Java**, **JSP**, **Servlets**
 4. **Update `DBConnection.java`**
     ```java
     String url = "jdbc:mysql://localhost:3306/voter_portal_db";
-    String username = "root"; // your MySQL username
-    String password = "your_password"; // your MySQL password
+    String username = "root"; 
+    String password = "your_password";
     ```
 
 5. **Add JDBC Driver**
