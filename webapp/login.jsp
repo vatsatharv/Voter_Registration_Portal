@@ -78,7 +78,7 @@
         </form>
 
         <!-- New Button to Main Page -->
-        <a href="register.jsp" class="main-page-btn">Go to Main Page</a>
+        <a href="main.jsp" class="main-page-btn">Go to Main Page</a>
 
         <% 
             String error = (String) request.getAttribute("error");
