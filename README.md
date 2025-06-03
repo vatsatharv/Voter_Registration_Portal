@@ -3,6 +3,7 @@
 A web-based voter registration system built with **Java**, **JSP**, **Servlets**, and **MySQL**. The application allows users and administrators to register, login, and access role-based dashboards securely.
 
 ---
+To access, open run the main.jsp file in Webapp folder
 
 ## 🚀 Features
 
