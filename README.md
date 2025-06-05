@@ -98,5 +98,4 @@ A web-based voter registration system built with Java, JSP, Servlets, and MySQL.
 Feel free to fork, suggest improvements, or raise issues!
 PRs are welcome 🚀
 
-📌 Author
 Made with 💻 and ☕ by Atharv Vats
