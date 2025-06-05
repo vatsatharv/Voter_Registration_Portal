@@ -9,7 +9,12 @@ import javax.servlet.http.*;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
         String email = request.getParameter("email");
@@ -34,10 +39,12 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("loginTime", new java.util.Date().toString());
 
                 if (userType.equalsIgnoreCase("ADMIN")) {
-                    response.sendRedirect("adminHome.jsp");
+                    // Old: response.sendRedirect("adminHome.jsp");
+                    response.sendRedirect("adminDashboard"); // servlet URL pattern, NOT a JSP file
                 } else {
                     response.sendRedirect("userHome.jsp");
                 }
+
 
             } else {
                 request.setAttribute("error", "Invalid email or password.");

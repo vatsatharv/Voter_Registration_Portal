@@ -3,6 +3,7 @@
 A web-based voter registration system built with **Java**, **JSP**, **Servlets**, and **MySQL**. The application allows users and administrators to register, login, and access role-based dashboards securely.
 
 ---
+To access, open run the main.jsp file in Webapp folder
 
 ## 🚀 Features
 
@@ -55,8 +56,8 @@ A web-based voter registration system built with **Java**, **JSP**, **Servlets**
 4. **Update `DBConnection.java`**
     ```java
     String url = "jdbc:mysql://localhost:3306/voter_portal_db";
-    String username = "root"; // your MySQL username
-    String password = "your_password"; // your MySQL password
+    String username = "root"; 
+    String password = "your_password";
     ```
 
 5. **Add JDBC Driver**
@@ -77,14 +78,6 @@ A web-based voter registration system built with **Java**, **JSP**, **Servlets**
 ---
 
 
-
----
-
-## 📄 License
-
-MIT License – use it freely for learning and development.
-
----
 
 ## 🤝 Contributing
 

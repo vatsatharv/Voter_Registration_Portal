@@ -71,7 +71,19 @@
     <button type="submit" class="btn-submit">Login</button>
 </form>
 
+<<<<<<< HEAD
         </div>
+=======
+        <!-- New Button to Main Page -->
+        <a href="main.jsp" class="main-page-btn">Go to Main Page</a>
+
+        <% 
+            String error = (String) request.getAttribute("error");
+            if (error != null) { 
+        %>
+            <p class="error"><%= error %></p>
+        <% } %>
+>>>>>>> a617bae048ef2dea605c93d1457d996acef4214c
     </div>
 <%@ include file="footer.jspf" %>
 </body>
