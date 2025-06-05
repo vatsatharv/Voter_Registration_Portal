@@ -31,10 +31,12 @@
     </style>
 </head>
 <body>
+<%@ include file="header.jspf" %>
     <h2>Welcome, <%= name %> <span class="badge">ADMIN</span></h2>
     <p><strong>Email:</strong> <%= email %></p>
     <p><strong>Login Time:</strong> <%= loginTime %></p>
-    <p>You have full access to the portal.</p>
+    <p>Only,You have full access to the portal.</p>
     <a href="logout">Logout</a>
+    <%@ include file="footer.jspf" %>
 </body>
 </html>

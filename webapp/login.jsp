@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ include file="header.jspf" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,86 +7,72 @@
     <title>Login | Voter Portal</title>
     <style>
         body {
+            margin: 0;
             font-family: 'Segoe UI', sans-serif;
-            background: #f0f2f5;
+            background: linear-gradient(135deg, #e0f7fa, #ffffff);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-container {
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            padding: 40px;
         }
 
-        .login-container {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            width: 320px;
+        .form-box {
+            background-color: white;
+            padding: 40px 50px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
         h2 {
-            text-align: center;
-            color: #333;
+            color: #00796b;
+            margin-bottom: 25px;
         }
 
         input[type="text"], input[type="password"] {
             width: 100%;
-            padding: 10px;
-            margin-top: 12px;
-            margin-bottom: 20px;
+            padding: 12px;
+            margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 8px;
         }
 
-        input[type="submit"], .main-page-btn {
-    width: 100%;
-    background-color: #6c757d; /* Gray - Secondary */
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    text-align: center;
-    display: block;
-    text-decoration: none;
-    margin-top: 10px;
-}
-
-.main-page-btn:hover {
-    background-color: #5a6268;
-}
-
+        .btn-submit {
+            background-color: #2196f3;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
         }
 
-        input[type="submit"]:hover, .main-page-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .error {
-            color: red;
-            text-align: center;
-            font-size: 14px;
+        .btn-submit:hover {
+            background-color: #1976d2;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Login</h2>
-        <form action="login" method="post">
-            <input type="text" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <input type="submit" value="Login">
-        </form>
+    <div class="main-container">
+        <div class="form-box">
+            <h2>Login to Your Account</h2>
+            <form action="${pageContext.request.contextPath}/login" method="post">
+    <input type="text" name="email" placeholder="Enter Email" required>
+    <input type="password" name="password" placeholder="Enter Password" required>
+    <br><br>
+    <button type="submit" class="btn-submit">Login</button>
+</form>
 
-        <!-- New Button to Main Page -->
-        <a href="register.jsp" class="main-page-btn">Go to Main Page</a>
-
-        <% 
-            String error = (String) request.getAttribute("error");
-            if (error != null) { 
-        %>
-            <p class="error"><%= error %></p>
-        <% } %>
+        </div>
     </div>
+<%@ include file="footer.jspf" %>
 </body>
 </html>
