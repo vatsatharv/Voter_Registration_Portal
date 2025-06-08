@@ -29,6 +29,8 @@
             border-radius: 15px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             text-align: center;
+            width: 100%;
+            max-width: 400px;
         }
 
         h2 {
@@ -58,6 +60,28 @@
         .btn-submit:hover {
             background-color: #1976d2;
         }
+
+        .main-page-btn {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .main-page-btn:hover {
+            background-color: #388e3c;
+        }
+
+        .error {
+            color: red;
+            margin-top: 15px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -65,25 +89,21 @@
         <div class="form-box">
             <h2>Login to Your Account</h2>
             <form action="${pageContext.request.contextPath}/login" method="post">
-    <input type="text" name="email" placeholder="Enter Email" required>
-    <input type="password" name="password" placeholder="Enter Password" required>
-    <br><br>
-    <button type="submit" class="btn-submit">Login</button>
-</form>
+                <input type="text" name="email" placeholder="Enter Email" required>
+                <input type="password" name="password" placeholder="Enter Password" required>
+                <br><br>
+                <button type="submit" class="btn-submit">Login</button>
+            </form>
 
-<<<<<<< HEAD
+            <a href="main.jsp" class="main-page-btn">Go to Main Page</a>
+
+            <% 
+                String error = (String) request.getAttribute("error");
+                if (error != null) { 
+            %>
+                <p class="error"><%= error %></p>
+            <% } %>
         </div>
-=======
-        <!-- New Button to Main Page -->
-        <a href="main.jsp" class="main-page-btn">Go to Main Page</a>
-
-        <% 
-            String error = (String) request.getAttribute("error");
-            if (error != null) { 
-        %>
-            <p class="error"><%= error %></p>
-        <% } %>
->>>>>>> a617bae048ef2dea605c93d1457d996acef4214c
     </div>
 <%@ include file="footer.jspf" %>
 </body>

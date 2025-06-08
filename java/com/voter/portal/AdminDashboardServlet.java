@@ -14,7 +14,7 @@ public class AdminDashboardServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("userType") == null
-                || !session.getAttribute("userType").equals("ADMIN")) {
+                || !session.getAttribute("userType").toString().equalsIgnoreCase("ADMIN")) {
             // Not logged in or not admin
             response.sendRedirect("login.jsp");
             return;
