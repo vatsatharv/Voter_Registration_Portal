@@ -28,28 +28,37 @@ public class LoginServlet extends HttpServlet {
             if (rs.next()) {
                 String userType = rs.getString("user_type");
 
-                // build User object
+
                 User user = new User();
+                user.setId(rs.getInt("id"));
                 user.setName(rs.getString("name"));
                 user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
                 user.setUserType(userType);
+                user.setGender(rs.getString("gender"));
+                user.setAge(rs.getInt("age"));
+                user.setAddress(rs.getString("address"));
+                user.setPhotoPath(rs.getString("photo_path"));
+                user.setIdProofPath(rs.getString("id_proof_path"));
+                user.setApproved(rs.getBoolean("isApproved"));
+                user.setHasVoted(rs.getBoolean("hasVoted")); 
 
-                // Save in session
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
-                session.setAttribute("userType", userType); // ✅ FIXED: required by AdminDashboardServlet
+                session.setAttribute("userType", userType);
                 session.setAttribute("role", userType.equalsIgnoreCase("ADMIN") ? "admin" : "user");
                 session.setAttribute("loginTime", new java.util.Date().toString());
                 session.setAttribute("loginSuccess", true);
 
-                System.out.println("Login Success: Redirecting to " + (userType.equalsIgnoreCase("ADMIN") ? "adminDashboard" : "userDashboard.jsp"));
+                System.out.println("Login Success: Redirecting to " + (userType.equalsIgnoreCase("ADMIN") ? "adminDashboard" : "voter_userDashboard.jsp"));
 
                 if (userType.equalsIgnoreCase("ADMIN")) {
-                    response.sendRedirect("adminDashboard"); // ✅ Must hit servlet
+                    response.sendRedirect("loginSuccess.jsp");
                 } else {
-                    response.sendRedirect("userDashboard.jsp");
+                    response.sendRedirect("loginSuccess.jsp");
                 }
-            } else {
+            }
+            	else {
                 // ❗ Handle invalid credentials
                 request.setAttribute("error", "Invalid email or password.");
                 RequestDispatcher rd = request.getRequestDispatcher("login.jsp");

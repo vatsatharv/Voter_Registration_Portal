@@ -1,15 +1,14 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page session="true" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page session="true" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="true" %>
 <%
     String name = (String) session.getAttribute("name");
-    String role = (String) session.getAttribute("role"); // "admin" or "user"
+    String role = (String) session.getAttribute("role");
     String redirectPage = "userDashboard.jsp";
     if ("admin".equalsIgnoreCase(role)) {
-        redirectPage = "adminDashboard.jsp";
+        redirectPage = "adminDashboard";  // This is the correct page
     }
+
 %>
+
 <!DOCTYPE html>
 <html>
 <head>

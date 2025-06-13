@@ -6,10 +6,16 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+@SuppressWarnings("unused")
 @WebServlet("/adminDashboard")
 public class AdminDashboardServlet extends HttpServlet {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);

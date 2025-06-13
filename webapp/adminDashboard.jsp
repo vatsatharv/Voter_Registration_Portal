@@ -57,7 +57,15 @@
 <div class="welcome-banner shadow-sm">
     <h3>Welcome, <%= admin.getName() %> 👋</h3>
     <p>You have full access to manage user registrations and voting activity.</p>
+    <a href="VoteResultServlet" class="btn btn-info mt-3">
+        🗳️ View Vote Summary
+    </a>
 </div>
+<form action="VoteResultServlet" method="get">
+    <button class="btn btn-info mt-3">
+        <i class="bi bi-bar-chart-line-fill"></i> View Vote Summary
+    </button>
+</form>
 
 
     <!-- User Table -->
@@ -88,7 +96,7 @@
                         <td><%= u.getEmail() %></td>
                         <td><%= u.getUserType() %></td>
                         <td class="action-btns">
-                            <a href="editUser?id=<%= u.getId() %>" class="btn btn-sm btn-warning">
+                        <a href="showEditUserForm?id=<%= u.getId() %>" class="btn btn-sm btn-warning">
                                 <i class="bi bi-pencil-fill"></i> Edit
                             </a>
                             <form action="deleteUser" method="post" style="display:inline;">
@@ -154,5 +162,25 @@
         session.removeAttribute("loginSuccess"); // remove so it doesn't show again
     }
 %>
+
+<%
+    Boolean editSuccess = (Boolean) session.getAttribute("editSuccess");
+    if (editSuccess != null) {
+%>
+    <div id="toast" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+        background: <%= editSuccess ? "#28a745" : "#dc3545" %>;
+        color: white; padding: 15px 30px; border-radius: 10px; font-size: 16px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2); z-index: 1000; opacity: 1;">
+        <%= editSuccess ? "✅ User details updated successfully." : "❌ Failed to update user details." %>
+    </div>
+    <script>
+        setTimeout(() => document.getElementById("toast").style.opacity = "0", 3000);
+        setTimeout(() => document.getElementById("toast").remove(), 4000);
+    </script>
+<%
+        session.removeAttribute("editSuccess");
+    }
+%>
+
 
 </html>

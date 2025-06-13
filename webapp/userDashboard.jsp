@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" %>
+<%@ page import="com.voter.portal.User" %>
 <%@ page session="true" %>
 <%
     String role = (String) session.getAttribute("role");
@@ -6,9 +7,10 @@
         response.sendRedirect("login.jsp");
         return;
     }
+
+    User loggedInUser = (User) session.getAttribute("user");
+    boolean isApproved = (loggedInUser != null) ? loggedInUser.isApproved() : false;
 %>
-
-
 
 <!DOCTYPE html>
 <html>
@@ -71,16 +73,42 @@
         .btn-main:hover {
             background-color: #0277bd;
         }
+
+        .btn-disabled {
+            background-color: gray;
+            cursor: not-allowed;
+        }
+
+        .note {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="dashboard-container">
-        <h2>Login Successful </h2>
+        <h2>Login Successful</h2>
         <h2>Welcome to Your Dashboard</h2>
-        <a href="vote.jsp" class="btn btn-vote">Vote Now</a>
+
+        <% if (isApproved) { %>
+    <% if (!loggedInUser.isHasVoted()) { %>
+        <a href="voter_userDashboard.jsp" class="btn btn-vote">Vote Now</a>
+    <% } else { %>
+        <form action="ViewMyVoteServlet" method="get" style="display:inline;">
+            <button class="btn btn-vote" type="submit">View My Vote</button>
+        </form>
+    <% } %>
+<% } else { %>
+    <button class="btn btn-disabled" disabled>Vote Now</button>
+    <div class="note">Your registration is pending admin approval.</div>
+<% } %>
+
+
         <a href="main.jsp" class="btn btn-main">Return to Main Menu</a>
     </div>
 </body>
+
 <%
     Boolean loginSuccess = (Boolean) session.getAttribute("loginSuccess");
     if (loginSuccess != null && loginSuccess) {
@@ -113,7 +141,7 @@
         }, 4000);
     </script>
 <%
-        session.removeAttribute("loginSuccess"); // remove so it doesn't show again
+        session.removeAttribute("loginSuccess");
     }
 %>
 
