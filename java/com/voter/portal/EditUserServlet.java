@@ -12,7 +12,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 @WebServlet("/editUser")
-@MultipartConfig
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024 * 1,   // 1MB
+    maxFileSize = 1024 * 1024 * 10,        // 10MB
+    maxRequestSize = 1024 * 1024 * 15      // 15MB
+)
 public class EditUserServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -22,7 +26,7 @@ public class EditUserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // ✅ Read user ID from form
+        
         String idParam = request.getParameter("id");
         if (idParam == null || idParam.isEmpty()) {
             response.sendRedirect("adminDashboard.jsp");
@@ -30,44 +34,56 @@ public class EditUserServlet extends HttpServlet {
         }
         int id = Integer.parseInt(idParam);
 
-        // ✅ Extract form fields
+        
         String gender = request.getParameter("gender");
         int age = Integer.parseInt(request.getParameter("age"));
         String address = request.getParameter("address");
         boolean isApproved = request.getParameter("isApproved") != null;
 
-        // ✅ Handle uploaded files
+        
         Part photoPart = request.getPart("photo");
         Part idProofPart = request.getPart("id_proof");
 
-        // Get real path to upload directory
-        String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
+        
+        String rootPath = System.getProperty("user.dir");
+        String uploadPath = rootPath + File.separator + UPLOAD_DIR;
+
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) uploadDir.mkdirs();
 
-        // Get original file names and generate unique names
+        
+        String timestamp = String.valueOf(System.currentTimeMillis());
         String photoFileName = Paths.get(photoPart.getSubmittedFileName()).getFileName().toString();
         String idProofFileName = Paths.get(idProofPart.getSubmittedFileName()).getFileName().toString();
 
-        String timestamp = String.valueOf(System.currentTimeMillis());
         String uniquePhotoName = "photo_" + id + "_" + timestamp + "_" + photoFileName;
         String uniqueIdProofName = "id_" + id + "_" + timestamp + "_" + idProofFileName;
 
         Path photoFullPath = Paths.get(uploadPath, uniquePhotoName);
         Path idProofFullPath = Paths.get(uploadPath, uniqueIdProofName);
 
+        
         try (InputStream photoStream = photoPart.getInputStream();
              InputStream idProofStream = idProofPart.getInputStream()) {
 
             Files.copy(photoStream, photoFullPath, StandardCopyOption.REPLACE_EXISTING);
             Files.copy(idProofStream, idProofFullPath, StandardCopyOption.REPLACE_EXISTING);
+
+            System.out.println("✅ Photo saved at: " + photoFullPath);
+            System.out.println("✅ ID Proof saved at: " + idProofFullPath);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            request.getSession().setAttribute("editSuccess", false);
+            response.sendRedirect("adminDashboard");
+            return;
         }
 
-        // Relative paths to store in DB
+        
         String dbPhotoPath = UPLOAD_DIR + "/" + uniquePhotoName;
         String dbIdProofPath = UPLOAD_DIR + "/" + uniqueIdProofName;
 
-        // ✅ Update the user in database
+
         try (Connection conn = DBConnection.getConnection()) {
             String sql = "UPDATE users SET gender=?, age=?, address=?, photo_path=?, id_proof_path=?, isApproved=? WHERE id=?";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -78,17 +94,22 @@ public class EditUserServlet extends HttpServlet {
             ps.setString(5, dbIdProofPath);
             ps.setBoolean(6, isApproved);
             ps.setInt(7, id);
-            ps.executeUpdate();
 
-            // Optional: Set success message
-            request.getSession().setAttribute("editSuccess", true);
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("✅ User info updated in database for ID: " + id);
+                request.getSession().setAttribute("editSuccess", true);
+            } else {
+                System.out.println("⚠️ No rows updated for ID: " + id);
+                request.getSession().setAttribute("editSuccess", false);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
             request.getSession().setAttribute("editSuccess", false);
         }
 
-        // ✅ Redirect back to admin dashboard
+
         response.sendRedirect("adminDashboard");
     }
 }

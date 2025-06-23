@@ -29,17 +29,20 @@
             border-radius: 15px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             text-align: center;
+            width: 100%;
+            max-width: 500px;
         }
 
         h2 {
             color: #00796b;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .btn {
-            display: inline-block;
-            padding: 12px 24px;
-            margin: 10px;
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
             font-size: 16px;
             border-radius: 8px;
             text-decoration: none;
@@ -47,12 +50,21 @@
             transition: all 0.3s ease;
         }
 
-        .btn-login {
+        .btn-admin {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .btn-admin:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-user {
             background-color: #2196f3;
             color: white;
         }
 
-        .btn-login:hover {
+        .btn-user:hover {
             background-color: #1976d2;
         }
 
@@ -70,7 +82,8 @@
     <div class="main-container">
         <div class="box">
             <h2>Welcome to the Online Voter Registration Portal</h2>
-            <a href="login.jsp" class="btn btn-login">Login</a>
+            <a href="login.jsp?type=admin" class="btn btn-admin">Login as Admin</a>
+            <a href="login.jsp?type=user" class="btn btn-user">Login as User</a>
             <a href="register.jsp" class="btn btn-register">Register</a>
         </div>
     </div>
