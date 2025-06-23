@@ -149,7 +149,7 @@ Pull requests, suggestions, and issues are welcome. Fork it, improve it, and con
 
 | Login Page                      | Admin Dashboard                           | User Dashboard                          |
 | ------------------------------- | ----------------------------------------- | --------------------------------------- |
-| ![Login](screenshots/login.png) | ![Admin](screenshots/admin_dashboard.png) | ![User](screenshots/user_dashboard.png) |
+|                                 |                                           |                                         |
 
 ---
 
