@@ -17,20 +17,29 @@ public class SendOTPServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     // Replace with your Gmail credentials
-    private static final String SENDER_EMAIL = "atharvvats15@gmail.com";
-    private static final String APP_PASSWORD = "ofzi lsjg hymw kkdb";
+    private static final String SENDER_EMAIL = "vatsatharv355@gmail.com";
+    private static final String APP_PASSWORD = "icwa gndh sppm blfv";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String email = request.getParameter("email").trim();
-        String password = request.getParameter("password").trim();
+    	String email = request.getParameter("email");
+    	String password = request.getParameter("password");
+
+    	if (email == null || password == null) {
+    	    response.getWriter().write("Missing email or password");
+    	    return;
+    	}
+
+    	email = email.trim();
+    	password = password.trim();
+        
 
         try (Connection conn = DBConnection.getConnection()) {
-            String query = "SELECT * FROM users WHERE email = ? AND password = ? AND user_type = 'user'";
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, email);
-            stmt.setString(2, password);
+        	String query = "SELECT * FROM users WHERE email = ? AND password = ? AND user_type = 'user'";
+        	PreparedStatement stmt = conn.prepareStatement(query);
+        	stmt.setString(1, email);
+        	stmt.setString(2, password);
 
             ResultSet rs = stmt.executeQuery();
 
@@ -74,6 +83,7 @@ public class SendOTPServlet extends HttpServlet {
                 return new PasswordAuthentication(SENDER_EMAIL, APP_PASSWORD);
             }
         });
+        session.setDebug(true);  
 
         Message message = new MimeMessage(session);
         message.setFrom(new InternetAddress(SENDER_EMAIL));

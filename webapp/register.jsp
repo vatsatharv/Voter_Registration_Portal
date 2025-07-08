@@ -1,82 +1,76 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ include file="header.jspf" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Register | Voter Portal</title>
+
+    <!-- Responsive Meta Tag -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
     <style>
         body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #e0f7fa, #ffffff);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
         }
 
-        .main-container {
-            flex: 1;
+        .register-container {
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 40px;
         }
 
-        .form-box {
-            background-color: white;
-            padding: 40px 50px;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            width: 400px;
+        .card {
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+        }
+
+        h3 {
+            color: #1a237e;
+            margin-bottom: 20px;
             text-align: center;
         }
 
-        h2 {
-            color: #1e3a8a;
-            margin-bottom: 25px;
+        .btn-primary {
+            background-color: #1a237e;
+            border: none;
         }
 
-        input[type="text"],
-        input[type="email"],
-        input[type="password"],
-        select {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+        .btn-primary:hover {
+            background-color: #0d164d;
+        }
+
+        .form-text a {
+            text-decoration: none;
+            color: #1a237e;
             font-size: 14px;
         }
 
-        .btn-submit {
-            background-color: #1e40af;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-            width: 100%;
+        .error-msg {
+            color: red;
+            font-size: 14px;
             margin-top: 10px;
         }
 
-        .btn-submit:hover {
-            background-color: #1e3a8a;
-        }
-
-        .message {
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        .message.success {
+        .success-msg {
             color: green;
-        }
-
-        .message.error {
-            color: red;
+            font-size: 14px;
+            margin-top: 10px;
         }
 
         .back-btn-container {
@@ -102,60 +96,73 @@
     </style>
 </head>
 <body>
-    <div class="main-container">
-        <div class="form-box">
-            <h2>Create Your Account</h2>
-            <form action="register" method="post">
-                <input type="text" name="name" placeholder="Full Name" required>
 
-                <input type="text" name="email" placeholder="Email" required
-                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-                    title="Enter a valid email address">
+<div class="register-container">
+    <div class="card">
+        <h3>Create Your Account</h3>
 
-                <input type="password" name="password" placeholder="Password" required minlength="6"
-                    title="Minimum 6 characters required">
+        <form action="register" method="post">
+            <div class="mb-3">
+                <input type="text" class="form-control" name="name" placeholder="Full Name" required>
+            </div>
 
-                <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+            <div class="mb-3">
+                <input type="email" class="form-control" name="email" placeholder="Email" required
+                       pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                       title="Enter a valid email address">
+            </div>
 
-                <select name="userType" required>
+            <div class="mb-3">
+                <input type="password" class="form-control" name="password" placeholder="Password" required minlength="6"
+                       title="Minimum 6 characters required">
+            </div>
+
+            <div class="mb-3">
+                <input type="password" class="form-control" name="confirmPassword" placeholder="Confirm Password" required>
+            </div>
+
+            <div class="mb-3">
+                <select name="userType" class="form-select" required>
                     <option value="">-- Select User Type --</option>
                     <option value="ADMIN">Admin</option>
                     <option value="USER">User</option>
                 </select>
+            </div>
 
-                <button type="submit" class="btn-submit">Register</button>
-            </form>
+            <button type="submit" class="btn btn-primary w-100">Register</button>
 
-            <%-- Display success or error messages --%>
+            <%-- Show message based on server feedback --%>
             <%
                 String msg = (String) request.getAttribute("message");
                 String err = (String) request.getAttribute("error");
                 if (msg != null) {
             %>
-                <p class="message success"><%= msg %></p>
+                <p class="success-msg text-center"><%= msg %></p>
             <% } else if (err != null) { %>
-                <p class="message error"><%= err %></p>
+                <p class="error-msg text-center"><%= err %></p>
             <% } %>
-        </div>
+        </form>
     </div>
+</div>
 
-    <%@ include file="footer.jspf" %>
+<%@ include file="footer.jspf" %>
 
-    <!-- Back to Main Page Button -->
-    <div class="back-btn-container">
-        <a href="main.jsp" class="back-btn">← Back to Main Page</a>
-    </div>
+<!-- Back Button -->
+<div class="back-btn-container">
+    <a href="main.jsp" class="back-btn">← Back to Main Page</a>
+</div>
 
-    <script>
-        // Client-side password match validation
-        document.querySelector("form").addEventListener("submit", function (e) {
-            const pwd = document.querySelector('input[name="password"]').value;
-            const cpwd = document.querySelector('input[name="confirmPassword"]').value;
-            if (pwd !== cpwd) {
-                e.preventDefault();
-                alert("Passwords do not match!");
-            }
-        });
-    </script>
+<script>
+    // Password match validation
+    document.querySelector("form").addEventListener("submit", function (e) {
+        const pwd = document.querySelector('input[name="password"]').value;
+        const cpwd = document.querySelector('input[name="confirmPassword"]').value;
+        if (pwd !== cpwd) {
+            e.preventDefault();
+            alert("Passwords do not match!");
+        }
+    });
+</script>
+
 </body>
 </html>

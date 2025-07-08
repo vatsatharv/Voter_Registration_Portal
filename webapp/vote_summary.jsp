@@ -2,30 +2,39 @@
 <%@ page import="java.util.Map" %>
 <%
     Map<String, Integer> voteMap = (Map<String, Integer>) request.getAttribute("voteMap");
+    int totalVotes = 0;
+    if (voteMap != null) {
+        for (Integer count : voteMap.values()) {
+            totalVotes += count;
+        }
+    }
 %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Vote Summary | Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(to right, #f3e5f5, #e3f2fd);
+            background: linear-gradient(to right, #e0f7fa, #f3e5f5);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            padding: 40px;
         }
 
         .summary-container {
-            background: white;
+            background-color: #ffffff;
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            text-align: center;
-            width: 500px;
+            width: 100%;
+            max-width: 700px;
         }
 
         h2 {
@@ -35,61 +44,67 @@
 
         table {
             width: 100%;
-            border-collapse: collapse;
         }
 
         th, td {
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
+            text-align: center;
+            padding: 12px;
         }
 
         th {
-            background-color: #f0f4c3;
+            background-color: #d1c4e9;
             color: #333;
         }
 
-        td {
+        .total-votes {
             font-size: 18px;
+            font-weight: 500;
+            margin: 20px 0;
+            color: #00796b;
         }
 
-        .btn {
+        .btn-back {
             margin-top: 30px;
-            padding: 10px 25px;
-            background-color: #0288d1;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
         }
 
-        .btn:hover {
-            background-color: #0277bd;
+        #toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #17a2b8;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 1000;
+        }
+
+        #toast.show {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-    <div class="summary-container">
-        <h2>🗳️ Vote Summary</h2>
-        
-        <%
-    int totalVotes = 0;
-    if (voteMap != null) {
-        for (Integer count : voteMap.values()) {
-            totalVotes += count;
-        }
-    }
-%>
 
-<p style="font-size: 18px; font-weight: bold; margin-bottom: 20px;">
-    🧮 Total Votes Cast: <%= totalVotes %>
-</p>
-        
+<div class="summary-container">
+    <h2><i class="bi bi-bar-chart-line-fill"></i> Vote Summary</h2>
 
-        <table>
+    <p class="total-votes">
+        🧮 Total Votes Cast: <%= totalVotes %>
+    </p>
+
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
             <tr>
                 <th>Candidate</th>
                 <th>Total Votes</th>
             </tr>
+        </thead>
+        <tbody>
             <%
                 if (voteMap != null && !voteMap.isEmpty()) {
                     for (Map.Entry<String, Integer> entry : voteMap.entrySet()) {
@@ -108,49 +123,32 @@
             <%
                 }
             %>
-        </table>
+        </tbody>
+    </table>
 
-        <form action="adminDashboard"  method="get">
-            <button class="btn">Back to Dashboard</button>
-        </form>
-       </div>
+    <form action="adminDashboard" method="get" class="text-center">
+        <button type="submit" class="btn btn-primary btn-back">
+            <i class="bi bi-arrow-left-circle-fill"></i> Back to Dashboard
+        </button>
+    </form>
+</div>
 
-    <!-- ✅ Toast Message for Vote Summary Loaded -->
-    <%
-        Boolean voteSummarySuccess = (Boolean) session.getAttribute("voteSummarySuccess");
-        if (voteSummarySuccess != null && voteSummarySuccess) {
-    %>
-        <div id="toast" style="
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #17a2b8;
-            color: white;
-            padding: 15px 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            font-size: 16px;
-            z-index: 1000;
-            opacity: 1;
-            transition: opacity 0.5s ease;
-        ">
-            ✅ Vote summary loaded successfully!
-        </div>
-        <script>
-            setTimeout(() => {
-                const toast = document.getElementById("toast");
-                if (toast) toast.style.opacity = "0";
-            }, 3000);
-            setTimeout(() => {
-                const toast = document.getElementById("toast");
-                if (toast) toast.remove();
-            }, 4000);
-        </script>
-    <%
-            session.removeAttribute("voteSummarySuccess");
-        }
-    %>
+<% 
+    Boolean voteSummarySuccess = (Boolean) session.getAttribute("voteSummarySuccess");
+    if (voteSummarySuccess != null && voteSummarySuccess) {
+%>
+    <div id="toast">✅ Vote summary loaded successfully!</div>
+    <script>
+        const toast = document.getElementById("toast");
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 4000);
+    </script>
+<% 
+    session.removeAttribute("voteSummarySuccess");
+    }
+%>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

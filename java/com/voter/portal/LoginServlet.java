@@ -52,11 +52,13 @@ public class LoginServlet extends HttpServlet {
 
                 System.out.println("Login Success: Redirecting to " + (userType.equalsIgnoreCase("ADMIN") ? "adminDashboard" : "voter_userDashboard.jsp"));
 
+                response.setContentType("text/plain");
                 if (userType.equalsIgnoreCase("ADMIN")) {
-                    response.sendRedirect("loginSuccess.jsp");
+                    response.getWriter().print("LOGIN_SUCCESS_ADMIN");
                 } else {
-                    response.sendRedirect("loginSuccess.jsp");
+                    response.getWriter().print("LOGIN_SUCCESS_USER");
                 }
+
             }
             	else {
                 // ❗ Handle invalid credentials

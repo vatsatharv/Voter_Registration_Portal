@@ -1,1 +1,75 @@
-@charset "UTF-8";
+/* ---- Global Styles ---- */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4 {
+  h1:not(.header-title), h2, h3, h4 {
+  color: #1a237e;
+}
+}
+
+/* ---- Buttons ---- */
+.btn-custom {
+  background-color: #1a237e;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-custom:hover {
+  background-color: #003366;
+  color: #fff;
+}
+
+/* ---- Cards / Sections ---- */
+.card-custom {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* ---- Footer ---- */
+footer {
+  background-color: #f5f5f5;
+  padding: 15px 0;
+  text-align: center;
+  color: #9e9e9e;
+  font-size: 14px;
+}
+
+/* ---- Alerts ---- */
+.alert-success {
+  background-color: #2e7d32;
+  color: white;
+}
+
+.alert-error {
+  background-color: #800000;
+  color: white;
+}
+
+/* ---- Header ---- */
+.header-title {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 26px;
+  margin: 0;
+}
+
+/* ---- Input Fields ---- */
+input[type="text"], input[type="email"], input[type="password"] {
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  width: 100%;
+  margin-bottom: 15px;
+}

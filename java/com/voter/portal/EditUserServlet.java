@@ -26,82 +26,77 @@ public class EditUserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        
         String idParam = request.getParameter("id");
         if (idParam == null || idParam.isEmpty()) {
-            response.sendRedirect("adminDashboard.jsp");
+            response.sendRedirect("adminDashboardServlet");
             return;
         }
-        int id = Integer.parseInt(idParam);
 
-        
-        String gender = request.getParameter("gender");
-        int age = Integer.parseInt(request.getParameter("age"));
-        String address = request.getParameter("address");
+        int id = Integer.parseInt(idParam);
         boolean isApproved = request.getParameter("isApproved") != null;
 
-        
+        // Get upload parts
         Part photoPart = request.getPart("photo");
-        Part idProofPart = request.getPart("id_proof");
+        Part idProofPart = request.getPart("idProof");
 
-        
-        String rootPath = System.getProperty("user.dir");
+        // Handle upload paths
+        String rootPath = getServletContext().getRealPath(""); // Safer for deployment
         String uploadPath = rootPath + File.separator + UPLOAD_DIR;
-
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) uploadDir.mkdirs();
 
-        
+        String photoPathDB = null;
+        String idProofPathDB = null;
+
         String timestamp = String.valueOf(System.currentTimeMillis());
-        String photoFileName = Paths.get(photoPart.getSubmittedFileName()).getFileName().toString();
-        String idProofFileName = Paths.get(idProofPart.getSubmittedFileName()).getFileName().toString();
 
-        String uniquePhotoName = "photo_" + id + "_" + timestamp + "_" + photoFileName;
-        String uniqueIdProofName = "id_" + id + "_" + timestamp + "_" + idProofFileName;
+        if (photoPart != null && photoPart.getSize() > 0) {
+            String originalPhoto = Paths.get(photoPart.getSubmittedFileName()).getFileName().toString();
+            String photoName = "photo_" + id + "_" + timestamp + "_" + originalPhoto;
+            Path fullPhotoPath = Paths.get(uploadPath, photoName);
 
-        Path photoFullPath = Paths.get(uploadPath, uniquePhotoName);
-        Path idProofFullPath = Paths.get(uploadPath, uniqueIdProofName);
-
-        
-        try (InputStream photoStream = photoPart.getInputStream();
-             InputStream idProofStream = idProofPart.getInputStream()) {
-
-            Files.copy(photoStream, photoFullPath, StandardCopyOption.REPLACE_EXISTING);
-            Files.copy(idProofStream, idProofFullPath, StandardCopyOption.REPLACE_EXISTING);
-
-            System.out.println("✅ Photo saved at: " + photoFullPath);
-            System.out.println("✅ ID Proof saved at: " + idProofFullPath);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            request.getSession().setAttribute("editSuccess", false);
-            response.sendRedirect("adminDashboard");
-            return;
+            try (InputStream is = photoPart.getInputStream()) {
+                Files.copy(is, fullPhotoPath, StandardCopyOption.REPLACE_EXISTING);
+                photoPathDB = UPLOAD_DIR + "/" + photoName;
+                System.out.println("✅ Photo uploaded: " + photoPathDB);
+            }
         }
 
-        
-        String dbPhotoPath = UPLOAD_DIR + "/" + uniquePhotoName;
-        String dbIdProofPath = UPLOAD_DIR + "/" + uniqueIdProofName;
+        if (idProofPart != null && idProofPart.getSize() > 0) {
+            String originalIdProof = Paths.get(idProofPart.getSubmittedFileName()).getFileName().toString();
+            String idName = "id_" + id + "_" + timestamp + "_" + originalIdProof;
+            Path fullIdPath = Paths.get(uploadPath, idName);
 
+            try (InputStream is = idProofPart.getInputStream()) {
+                Files.copy(is, fullIdPath, StandardCopyOption.REPLACE_EXISTING);
+                idProofPathDB = UPLOAD_DIR + "/" + idName;
+                System.out.println("✅ ID Proof uploaded: " + idProofPathDB);
+            }
+        }
 
         try (Connection conn = DBConnection.getConnection()) {
-            String sql = "UPDATE users SET gender=?, age=?, address=?, photo_path=?, id_proof_path=?, isApproved=? WHERE id=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, gender);
-            ps.setInt(2, age);
-            ps.setString(3, address);
-            ps.setString(4, dbPhotoPath);
-            ps.setString(5, dbIdProofPath);
-            ps.setBoolean(6, isApproved);
-            ps.setInt(7, id);
 
-            int rowsUpdated = ps.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("✅ User info updated in database for ID: " + id);
+            StringBuilder sql = new StringBuilder("UPDATE users SET isApproved=?");
+            if (photoPathDB != null) sql.append(", photo_path=?");
+            if (idProofPathDB != null) sql.append(", id_proof_path=?");
+            sql.append(" WHERE id=?");
+
+            PreparedStatement ps = conn.prepareStatement(sql.toString());
+            ps.setBoolean(1, isApproved);
+
+            int paramIndex = 2;
+            if (photoPathDB != null) ps.setString(paramIndex++, photoPathDB);
+            if (idProofPathDB != null) ps.setString(paramIndex++, idProofPathDB);
+            ps.setInt(paramIndex, id);
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
                 request.getSession().setAttribute("editSuccess", true);
+                System.out.println("✅ User updated in DB (id=" + id + ")");
             } else {
-                System.out.println("⚠️ No rows updated for ID: " + id);
                 request.getSession().setAttribute("editSuccess", false);
+                System.out.println("⚠️ No rows updated for id=" + id);
             }
 
         } catch (Exception e) {
@@ -109,7 +104,6 @@ public class EditUserServlet extends HttpServlet {
             request.getSession().setAttribute("editSuccess", false);
         }
 
-
-        response.sendRedirect("adminDashboard");
+        response.sendRedirect("adminDashboardServlet");
     }
 }

@@ -1,93 +1,107 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="com.voter.portal.User" %>
+<%@ page session="true" %>
+
 <%
-    User editUser = (User) request.getAttribute("editUser");
-    if (editUser == null) {
+    User user = (User) request.getAttribute("user");
+    if (user == null) {
         response.sendRedirect("adminDashboard.jsp");
         return;
     }
+
+    String photoPath = user.getPhotoPath();     // Assuming getters are available
+    String idPath = user.getIdProofPath();
+    boolean isApproved = user.isApproved();     // Assuming boolean getter
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Complete User Registration</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Complete Registration - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background: #f4f7fa;
+            background: #f2f4f8;
             font-family: 'Segoe UI', sans-serif;
+            padding: 40px;
         }
-        .form-container {
+        .container {
             max-width: 600px;
-            margin: 40px auto;
+        }
+        .form-box {
             background: white;
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         }
-        h3 {
-            color: #007bff;
+        .form-control[readonly] {
+            background-color: #f9f9f9;
+        }
+        .preview-box {
+            margin-bottom: 15px;
         }
     </style>
 </head>
 <body>
 
-<div class="form-container">
-    <h3>Complete Registration for: <%= editUser.getName() %></h3>
-    <form action="editUser" method="post" enctype="multipart/form-data">
+<div class="container">
+    <div class="form-box">
+        <h3 class="mb-4 text-primary">Complete User Registration</h3>
 
-        <!-- Hidden User ID -->
-        <input type="hidden" name="id" value="<%= editUser.getId() %>">
+        <form action="EditUserServlet" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="<%= user.getId() %>">
 
-        <!-- Email (readonly) -->
-        <div class="mb-3">
-            <label>Email:</label>
-            <input type="email" class="form-control" value="<%= editUser.getEmail() %>" readonly>
+            <div class="mb-3">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-control" value="<%= user.getName() %>" readonly>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="text" class="form-control" value="<%= user.getEmail() %>" readonly>
+            </div>
+
+            <!-- Preview existing photo -->
+            <% if (photoPath != null && !photoPath.isEmpty()) { %>
+                <div class="preview-box">
+                    <label class="form-label">Current Photo</label><br>
+                    <img src="<%= photoPath %>" alt="User Photo" style="max-height: 100px; border: 1px solid #ccc;">
+                </div>
+            <% } %>
+
+            <div class="mb-3">
+                <label class="form-label">Upload New Photo</label>
+                <input type="file" name="photo" class="form-control" accept="image/*">
+            </div>
+
+            <!-- Preview existing ID Proof -->
+            <% if (idPath != null && !idPath.isEmpty()) { %>
+                <div class="preview-box">
+                    <label class="form-label">Current ID Proof</label><br>
+                    <a href="<%= idPath %>" target="_blank">View Uploaded ID</a>
+                </div>
+            <% } %>
+
+            <div class="mb-3">
+                <label class="form-label">Upload New ID Proof</label>
+                <input type="file" name="idProof" class="form-control">
+            </div>
+
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="isApproved" id="approveCheck" <%= isApproved ? "checked" : "" %>>
+                <label class="form-check-label" for="approveCheck">
+                    Approve this user
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">Save & Complete Registration</button>
+        </form>
+
+        <div class="mt-3 text-center">
+            <a href="adminDashboardServlet" class="btn btn-secondary">← Back to Dashboard</a>
         </div>
-
-        <!-- Gender -->
-        <div class="mb-3">
-            <label>Gender:</label>
-            <input type="text" name="gender" class="form-control" required>
-        </div>
-
-        <!-- Age -->
-        <div class="mb-3">
-            <label>Age:</label>
-            <input type="number" name="age" class="form-control" min="18" required>
-        </div>
-
-        <!-- Address -->
-        <div class="mb-3">
-            <label>Address:</label>
-            <textarea name="address" class="form-control" rows="3" required></textarea>
-        </div>
-
-        <!-- Photo Upload -->
-        <div class="mb-3">
-            <label>Upload Photo:</label>
-            <input type="file" name="photo" class="form-control" required>
-            <small class="text-muted">All file types allowed. Will be renamed automatically.</small>
-        </div>
-
-        <!-- ID Proof Upload -->
-        <div class="mb-3">
-            <label>Upload ID Proof:</label>
-            <input type="file" name="id_proof" class="form-control" required>
-            <small class="text-muted">All file types allowed. Will be renamed automatically.</small>
-        </div>
-
-        <!-- Approval Checkbox -->
-        <div class="form-check mb-4">
-            <input class="form-check-input" type="checkbox" name="isApproved" id="isApproved">
-            <label class="form-check-label" for="isApproved">Mark as Approved</label>
-        </div>
-
-        <div class="d-flex justify-content-between">
-            <a href="adminDashboard" class="btn btn-secondary">Cancel</a>
-            <button type="submit" class="btn btn-primary">Submit & Save</button>
-        </div>
-    </form>
+    </div>
 </div>
 
 </body>

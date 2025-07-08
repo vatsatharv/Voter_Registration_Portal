@@ -12,6 +12,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
     <title>Login Successful</title>
     <style>
@@ -71,6 +72,7 @@
     </style>
 </head>
 <body>
+
     <div class="success-box">
         <div class="checkmark">&#10004;</div>
         <h2>Login Successful</h2>
