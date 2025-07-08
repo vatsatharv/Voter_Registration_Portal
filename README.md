@@ -147,21 +147,20 @@ Pull requests, suggestions, and issues are welcome. Fork it, improve it, and con
 
 ## 📌 Screenshots
 
-| Login Page                      | Admin Dashboard                           | User Dashboard                          |
-| ------------------------------- | ----------------------------------------- | --------------------------------------- |
-|                                 |                                           |                                         |
+| Login Page  | Admin Dashboard   | User Dashboard| New User Registration Page|
+| ----------------------------------------------------------------------------------------  | -----------------------------------------| -------------------- | -------------------- |
+| ![image](https://github.com/user-attachments/assets/ebfdba37-5b83-4b53-9c81-707e69e06a51) | ![image](https://github.com/user-attachments/assets/64e7875d-5361-4c11-8bcc-db80f731ae30) | ![image](https://github.com/user-attachments/assets/b3952389-3aa4-42c8-849b-e17005b817e8) | ![image](https://github.com/user-attachments/assets/f7062fac-f138-4aca-8750-e924663c7b09) |
+
 
 ---
 
 ## 🎥 Demo Video
 
+User Workflow
+https://github.com/user-attachments/assets/5fb6ec76-3aa0-4100-85e3-31cbf51e8411
 
-
----
-
-## 📀 License
-
-This project is open-source and available under the [MIT License](LICENSE).
+Admin Workflow
+https://github.com/user-attachments/assets/e67e2f12-9395-4cce-890c-1231f751a5a1
 
 ---
 
